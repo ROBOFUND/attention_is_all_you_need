@@ -7,6 +7,7 @@ import re
 import numpy
 import progressbar
 
+import s3utils
 
 split_pattern = re.compile(r'([.,!?"\':;)(])')
 digit_pattern = re.compile(r'\d')
@@ -24,7 +25,8 @@ def split_sentence(s):
 
 
 def open_file(path):
-    return io.open(path, encoding='utf-8', errors='ignore')
+    return s3utils.read_obj(path)
+    #return io.open(path, encoding='utf-8', errors='ignore')
 
 
 def count_lines(path):
