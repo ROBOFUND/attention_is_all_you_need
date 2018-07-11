@@ -183,7 +183,7 @@ def main():
     print('Original training data size: %d' % len(source_data))
     train_data = [(s, t)
                   for s, t in six.moves.zip(source_data, target_data)
-                  if 0 < len(s) < 50 and 0 < len(t) < 50]
+                  if 0 < len(s) < 300 and 0 < len(t) < 300]
     print('Filtered training data size: %d' % len(train_data))
 
     en_path = os.path.join(args.input, args.source_valid)
