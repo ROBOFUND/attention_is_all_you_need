@@ -20,6 +20,7 @@ import net
 
 from subfuncs import VaswaniRule
 
+from natto import MeCab
 
 def seq2seq_pad_concat_convert(xy_batch, device, eos_id=0, bos_id=2):
     """
@@ -163,6 +164,8 @@ def main():
     parser.add_argument('--use-fixed-lr', action='store_true',
                         help='Use fixed learning rate rather than the ' +
                              'annealing proposed in the paper')
+    parser.add_argument('--disable-mecab', '--dm', action='store_true',
+                        help='disalbe mecab toknize')
     args = parser.parse_args()
     print(json.dumps(args.__dict__, indent=4))
 
@@ -182,6 +185,8 @@ def main():
 
     target_words = {i: w for w, i in target_ids.items()}
     source_words = {i: w for w, i in source_ids.items()}
+
+    m = MeCab('-Owakati')
 
     # Define Model
     model = net.Transformer(
@@ -210,9 +215,15 @@ def main():
         print('#  result : ' + ' '.join(words))
         print('#  expect : ' + target)
 
+    def tokenize(source, target):
+        if args.disable_mecab:
+            return source, target
+        return m.parse(source), m.parse(target)
+
     while True:
         source = input('source> ')
         target = input('target> ')
+        source, target = tokenize(source, target)
         translate_one(source, target)
 
 if __name__ == '__main__':
