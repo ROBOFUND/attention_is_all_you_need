@@ -174,11 +174,8 @@ def main():
     fr_path = os.path.join(args.input, args.target)
     target_vocab = ['<eos>', '<unk>', '<bos>'] + \
         preprocess.count_words(fr_path, args.target_vocab)
-    print('Original training data size: %d' % len(source_data))
-    train_data = [(s, t)
-                  for s, t in six.moves.zip(source_data, target_data)
-                  if 0 < len(s) < 300 and 0 < len(t) < 300]
-    print('Filtered training data size: %d' % len(train_data))
+    # print('Original training data size: %d' % len(source_data))
+    # print('Filtered training data size: %d' % len(train_data))
 
     source_ids = {word: index for index, word in enumerate(source_vocab)}
     target_ids = {word: index for index, word in enumerate(target_vocab)}
@@ -201,7 +198,7 @@ def main():
         chainer.cuda.get_device(args.gpu).use()
         model.to_gpu(args.gpu)
 
-    chainer.serializers.load_npz(args.model)
+    chainer.serializers.load_npz(args.model, model)
 
     def translate_one(source, target):
         words = preprocess.split_sentence(source)
