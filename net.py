@@ -282,7 +282,7 @@ class Decoder(chainer.Chain):
 class Transformer(chainer.Chain):
 
     def __init__(self, n_layers, n_source_vocab, n_target_vocab, n_units,
-                 h=8, dropout=0.1, max_length=500,
+                 h=8, dropout=0.1, max_length=200,
                  use_label_smoothing=False,
                  embed_position=False):
         super(Transformer, self).__init__()
