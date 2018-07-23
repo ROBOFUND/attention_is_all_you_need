@@ -14,7 +14,7 @@
             {{ message }}
           {% endif %}
         </p>
-        <form action="/" method="post" class="form-inline">
+        <form action="." method="post" class="form-inline">
           <label for="name">記事本文</label>
 	  <textarea rows="8" cols="60" class="form-control" id="name" name="body" placeholder="記事本文">{% if body %}{{ body }}{% endif %}</textarea>
 	  {% if abst %}
