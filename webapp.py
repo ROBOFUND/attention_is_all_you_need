@@ -72,6 +72,8 @@ def main():
         use_label_smoothing=args.use_label_smoothing,
         embed_position=args.embed_position)
 
+    chainer.serializers.load_npz(args.model, model)
+
     def picked_up():
         messages = [
             'こんにちは、あなたの名前を入力してください',
