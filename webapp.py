@@ -46,17 +46,15 @@ def main():
         ]
         return np.random.choice(messages)
 
-    @app.route('/')
-    def index():
-        title = 'ようこそ'
-        message = picked_up()
-        return render_template('index.html',
-                               message=message, title=title)
-
-    @app.route('/post', methods=['GET', 'POST'])
+    @app.route('/', methods=['GET', 'POST'])
     def post():
         title = 'こんにちは'
-        if request.method == 'POST':
+        if request.method == 'GET':
+            title = 'ようこそ'
+            message = picked_up()
+            return render_template('index.html',
+                                   message=message, title=title)
+        elif request.method == 'POST':
             name = request.form['name']
             return render_template('index.html',
                                    name=name, title=title)
