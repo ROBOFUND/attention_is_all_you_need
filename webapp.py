@@ -7,6 +7,9 @@ import numpy as np
 import argparse
 import chainer
 
+import preprocess
+import net
+
 from natto import MeCab
 
 def get_args():
@@ -30,6 +33,13 @@ def get_args():
                         help='Vocabulary size of source language')
     parser.add_argument('--target-vocab', type=int, default=40000,
                         help='Vocabulary size of target language')
+    parser.add_argument('--use-label-smoothing', action='store_true',
+                        help='Use label smoothing for cross entropy')
+    parser.add_argument('--embed-position', action='store_true',
+                        help='Use position embedding rather than sinusoid')
+    parser.add_argument('--model', type=str,
+                        default='result-sum-f200/best_model.npz',
+                        help='Vocabulary size of target language')
     args = parser.parse_args()
     return args
 
@@ -37,6 +47,30 @@ def get_args():
 def main():
     args = get_args()
     app = Flask(__name__)
+
+    source_vocab = ['<eos>', '<unk>', '<bos>'] + \
+        preprocess.count_words(args.source, args.source_vocab)
+    source_data = preprocess.make_dataset(args.source, source_vocab)
+    target_vocab = ['<eos>', '<unk>', '<bos>'] + \
+        preprocess.count_words(args.target, args.target_vocab)
+    target_data = preprocess.make_dataset(args.target, target_vocab)
+    
+    source_ids = {word: index for index, word in enumerate(source_vocab)}
+    target_ids = {word: index for index, word in enumerate(target_vocab)}
+
+    target_words = {i: w for w, i in target_ids.items()}
+    source_words = {i: w for w, i in source_ids.items()}
+    
+    model = net.Transformer(
+        args.layer,
+        min(len(source_ids), len(source_words)),
+        min(len(target_ids), len(target_words)),
+        args.unit,
+        h=args.head,
+        dropout=args.dropout,
+        max_length=500,
+        use_label_smoothing=args.use_label_smoothing,
+        embed_position=args.embed_position)
 
     def picked_up():
         messages = [
