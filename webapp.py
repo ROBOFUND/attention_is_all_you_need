@@ -11,6 +11,7 @@ import preprocess
 import net
 
 from natto import MeCab
+import neologdn
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -93,9 +94,10 @@ def main():
             return render_template('index.html',
                                    message=message, title=title)
         elif request.method == 'POST':
-            name = request.form['name']
+            body = request.form['body']
+            body = m.parse(neologdn.normalize(body))
             return render_template('index.html',
-                                   name=name, title=title)
+                                   body=body, title=title)
         else:
             return redirect(url_for('index'))
     
