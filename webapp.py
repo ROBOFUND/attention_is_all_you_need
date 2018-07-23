@@ -6,12 +6,20 @@ from flask import Flask, render_template, request, redirect, url_for
 import numpy as np
 import argparse
 import chainer
+import re
 
 import preprocess
 import net
 
 from natto import MeCab
 import neologdn
+
+digit_pattern = re.compile(r'\d')
+
+def normalize(inp):
+    s = neologdn.normalize(inp)
+    s = digit_pattern.sub('0', s)
+    return s
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -95,7 +103,7 @@ def main():
                                    message=message, title=title)
         elif request.method == 'POST':
             body = request.form['body']
-            body = m.parse(neologdn.normalize(body))
+            body = m.parse(normalize(body))
             abst = translate_one(body)
             return render_template('index.html',
                                    body=body, title=title, abst=abst)
