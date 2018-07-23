@@ -38,12 +38,31 @@ def main():
     args = get_args()
     app = Flask(__name__)
 
+    def picked_up():
+        messages = [
+            'こんにちは、あなたの名前を入力してください',
+            'やあ、お名前はなんですか?',
+            'あなたの名前を教えてね'
+        ]
+        return np.random.choice(messages)
+
     @app.route('/')
     def index():
         title = 'ようこそ'
-        message = 'test'
+        message = picked_up()
         return render_template('index.html',
                                message=message, title=title)
+
+    @app.route('/post', methods=['GET', 'POST'])
+    def post():
+        title = 'こんにちは'
+        if request.method == 'POST':
+            name = request.form['name']
+            return render_template('index.html',
+                                   name=name, title=title)
+        else:
+            return redirect(url_for('index'))
+    
     app.debug = True
     app.run(host='localhost')
 
