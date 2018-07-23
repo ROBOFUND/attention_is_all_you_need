@@ -77,6 +77,15 @@ def main():
 
     m = MeCab('-Owakati')
 
+    def translate_one(source):
+        words = preprocess.split_sentence(source)
+        #print('# source : ' + ' '.join(words))
+        x = model.xp.array(
+            [source_ids.get(w, 1) for w in words], 'i')
+        ys = model.translate([x], beam=5)[0]
+        words = [target_words[y] for y in ys]
+        return ''.join(words)
+    
     def picked_up():
         messages = [
             'こんにちは、あなたの名前を入力してください',
@@ -96,8 +105,9 @@ def main():
         elif request.method == 'POST':
             body = request.form['body']
             body = m.parse(neologdn.normalize(body))
+            abst = translate_one(body)
             return render_template('index.html',
-                                   body=body, title=title)
+                                   body=body, title=title, abst=abst)
         else:
             return redirect(url_for('index'))
     
