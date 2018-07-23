@@ -86,20 +86,11 @@ def main():
         words = [target_words[y] for y in ys]
         return ''.join(words)
     
-    def picked_up():
-        messages = [
-            'こんにちは、あなたの名前を入力してください',
-            'やあ、お名前はなんですか?',
-            'あなたの名前を教えてね'
-        ]
-        return np.random.choice(messages)
-
     @app.route('/', methods=['GET', 'POST'])
     def post():
-        title = 'こんにちは'
+        title = '日経記事要約 by transformer'
         if request.method == 'GET':
-            title = 'ようこそ'
-            message = picked_up()
+            message = '日経に関連する記事を入力してください'
             return render_template('index.html',
                                    message=message, title=title)
         elif request.method == 'POST':
