@@ -74,6 +74,8 @@ def main():
 
     chainer.serializers.load_npz(args.model, model)
 
+    m = MeCab('-Owakati')
+
     def picked_up():
         messages = [
             'こんにちは、あなたの名前を入力してください',
