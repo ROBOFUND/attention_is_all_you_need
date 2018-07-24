@@ -69,7 +69,9 @@ def main():
 
     target_words = {i: w for w, i in target_ids.items()}
     source_words = {i: w for w, i in source_ids.items()}
-    
+
+    chainer.using_config('train', False)
+    chainer.no_backprop_mode()
     model = net.Transformer(
         args.layer,
         min(len(source_ids), len(source_words)),
